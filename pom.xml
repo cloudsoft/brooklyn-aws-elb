@@ -42,6 +42,7 @@
     <properties>
         <brooklyn.jackson.version>2.7.5</brooklyn.jackson.version>
         <aws.sdk.version>1.10.53</aws.sdk.version>
+        <joda.time.version>2.4</joda.time.version>
     </properties>
 
     <dependencyManagement>
@@ -68,25 +69,6 @@
                 <groupId>com.amazonaws</groupId>
                 <artifactId>aws-java-sdk-elasticloadbalancing</artifactId>
                 <version>${aws.sdk.version}</version>
-                <!-- The included version of Jackson breaks our REST UI -->
-                <exclusions>
-                    <exclusion>
-                        <artifactId>com.fasterxml.jackson.core</artifactId>
-                        <groupId>jackson-databind</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>com.fasterxml.jackson.core</artifactId>
-                        <groupId>jackson-annotations</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>com.fasterxml.jackson.core</artifactId>
-                        <groupId>jackson-core</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>joda-time</artifactId>
-                        <groupId>joda-time</groupId>
-                    </exclusion>
-                </exclusions>
             </dependency>
 
             <!-- alternative (excluded) dependencies, to match those other transitive dependencies in Brooklyn -->
@@ -108,7 +90,7 @@
             <dependency>
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
-                <version>2.4</version>
+                <version>${joda.time.version}</version>
             </dependency>
 
             <!-- test dependencies -->

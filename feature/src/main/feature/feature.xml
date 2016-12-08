@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <features xmlns="http://karaf.apache.org/xmlns/features/v1.4.0" name="${project.groupId}-${project.version}">
 
-    <feature name="aws-sdk-bundles" version="${project.version}">
-        <bundle>wrap:mvn:com.amazonaws/aws-java-sdk-core/${aws.sdk.version}</bundle>
-        <bundle>wrap:mvn:com.amazonaws/aws-java-sdk-elasticloadbalancing/${aws.sdk.version}</bundle>
-    </feature>
 
     <feature name="amp-aws-elb-dependencies" version="${project.version}" >
         <feature prerequisite="true">brooklyn-software-base</feature>
         <feature prerequisite="true">brooklyn-locations-jclouds</feature>
-        <feature prerequisite="true">aws-sdk-bundles</feature>
+        <bundle>mvn:joda-time/joda-time/${joda.time.version}</bundle>
     </feature>
 
     <feature name="amp-aws-elb" version="${project.version}">
