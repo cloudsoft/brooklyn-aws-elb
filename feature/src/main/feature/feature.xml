@@ -5,6 +5,8 @@
     <feature name="amp-aws-elb-dependencies" version="${project.version}" >
         <feature prerequisite="true">brooklyn-software-base</feature>
         <feature prerequisite="true">brooklyn-locations-jclouds</feature>
+        <bundle>mvn:com.amazonaws/aws-java-sdk-osgi/${aws.sdk.version}</bundle>
+        <bundle>mvn:com.fasterxml.jackson.dataformat/jackson-dataformat-cbor/${jackson.dataformat.cbor.version}</bundle>
         <bundle>mvn:joda-time/joda-time/${joda.time.version}</bundle>
     </feature>
 

@@ -42,7 +42,8 @@
     <properties>
         <brooklyn.jackson.version>2.7.5</brooklyn.jackson.version>
         <aws.sdk.version>1.10.53</aws.sdk.version>
-        <joda.time.version>2.4</joda.time.version>
+        <joda.time.version>2.9.6</joda.time.version>
+        <jackson.dataformat.cbor.version>2.7.8</jackson.dataformat.cbor.version>
     </properties>
 
     <dependencyManagement>
@@ -67,8 +68,38 @@
 
             <dependency>
                 <groupId>com.amazonaws</groupId>
-                <artifactId>aws-java-sdk-elasticloadbalancing</artifactId>
+                <artifactId>aws-java-sdk-osgi</artifactId>
                 <version>${aws.sdk.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>com.fasterxml.jackson.core</artifactId>
+                        <groupId>jackson-databind</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>com.fasterxml.jackson.core</artifactId>
+                        <groupId>jackson-annotations</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>com.fasterxml.jackson.core</artifactId>
+                        <groupId>jackson-core</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>joda-time</artifactId>
+                        <groupId>joda-time</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- jackson-dataformat-cbor added to avoid
+
+            karaf@amp>feature:install amp-aws-elb
+Error executing command: Unable to resolve root: missing requirement [root] osgi.identity; osgi.identity=amp-aws-elb; type=karaf.feature; version="[0.5.0.SNAPSHOT,0.5.0.SNAPSHOT]"; filter:="(&(osgi.identity=amp-aws-elb)(type=karaf.feature)(version>=0.5.0.SNAPSHOT)(version<=0.5.0.SNAPSHOT))" [caused by: Unable to resolve amp-aws-elb/0.5.0.SNAPSHOT: missing requirement [amp-aws-elb/0.5.0.SNAPSHOT] osgi.identity; osgi.identity=brooklyn-aws-elb; type=osgi.bundle; version="[0.5.0.SNAPSHOT,0.5.0.SNAPSHOT]"; resolution:=mandatory [caused by: Unable to resolve brooklyn-aws-elb/0.5.0.SNAPSHOT: missing requirement [brooklyn-aws-elb/0.5.0.SNAPSHOT] osgi.wiring.package; filter:="(&(osgi.wiring.package=com.fasterxml.jackson.dataformat.cbor)(version>=2.6.0)(!(version>=3.0.0)))"]]
+
+            -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-cbor</artifactId>
+                <version>${jackson.dataformat.cbor.version}</version>
             </dependency>
 
             <!-- alternative (excluded) dependencies, to match those other transitive dependencies in Brooklyn -->
