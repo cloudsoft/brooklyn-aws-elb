@@ -1,11 +1,12 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
+
     <groupId>io.cloudsoft.aws.elb</groupId>
-    <artifactId>brooklyn-aws-elb</artifactId>
+    <artifactId>brooklyn-aws-elb-parent</artifactId>
     <version>0.5.0-SNAPSHOT</version> <!-- BROOKLYN_AWS_ELB_VERSION -->
-    <packaging>jar</packaging>
-    
+    <packaging>pom</packaging>
+
     <name>Brooklyn AWS Elastic Load Balancer</name>
     <description>
         Brooklyn AWS Elastic Load Balancer
@@ -17,7 +18,7 @@
         <artifactId>brooklyn-downstream-parent</artifactId>
         <version>0.10.0-SNAPSHOT</version> <!-- BROOKLYN_VERSION -->
     </parent>
-    
+
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -40,135 +41,163 @@
 
     <properties>
         <brooklyn.jackson.version>2.7.5</brooklyn.jackson.version>
+        <aws.sdk.version>1.10.53</aws.sdk.version>
+        <joda.time.version>2.9.6</joda.time.version>
+        <jackson.dataformat.cbor.version>2.7.8</jackson.dataformat.cbor.version>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.apache.brooklyn</groupId>
-            <artifactId>brooklyn-software-base</artifactId>
-            <version>${brooklyn.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.brooklyn</groupId>
-            <artifactId>brooklyn-software-webapp</artifactId>
-            <version>${brooklyn.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.brooklyn</groupId>
-            <artifactId>brooklyn-locations-jclouds</artifactId>
-            <version>${brooklyn.version}</version>
-        </dependency>
+    <dependencyManagement>
 
-        <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk</artifactId>
-            <version>1.10.53</version>
-            <!-- The included version of Jackson breaks our REST UI -->
-            <exclusions>
-                <exclusion>
-                    <artifactId>com.fasterxml.jackson.core</artifactId>
-                    <groupId>jackson-databind</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>com.fasterxml.jackson.core</artifactId>
-                    <groupId>jackson-annotations</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>com.fasterxml.jackson.core</artifactId>
-                    <groupId>jackson-core</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>joda-time</artifactId>
-                    <groupId>joda-time</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
 
-        <!-- alternative (excluded) dependencies, to match those other transitive dependencies in Brooklyn -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${brooklyn.jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>${brooklyn.jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>${brooklyn.jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>2.4</version>
-        </dependency>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.brooklyn</groupId>
+                <artifactId>brooklyn-software-base</artifactId>
+                <version>${brooklyn.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.brooklyn</groupId>
+                <artifactId>brooklyn-software-webapp</artifactId>
+                <version>${brooklyn.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.brooklyn</groupId>
+                <artifactId>brooklyn-locations-jclouds</artifactId>
+                <version>${brooklyn.version}</version>
+            </dependency>
 
-        <!-- test dependencies -->
-        <dependency>
-            <groupId>org.apache.brooklyn</groupId>
-            <artifactId>brooklyn-all</artifactId>
-            <version>${brooklyn.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.brooklyn</groupId>
-            <artifactId>brooklyn-test-support</artifactId>
-            <scope>test</scope>
-            <version>${brooklyn.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.brooklyn</groupId>
-            <artifactId>brooklyn-core</artifactId>
-            <classifier>tests</classifier>
-            <scope>test</scope>
-            <version>${brooklyn.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.brooklyn</groupId>
-            <artifactId>brooklyn-software-database</artifactId>
-            <scope>test</scope>
-            <version>${brooklyn.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.brooklyn</groupId>
-            <artifactId>brooklyn-software-base</artifactId>
-            <classifier>tests</classifier>
-            <scope>test</scope>
-            <version>${brooklyn.version}</version>
-        </dependency>
-    </dependencies>
-    
+            <dependency>
+                <groupId>com.amazonaws</groupId>
+                <artifactId>aws-java-sdk-osgi</artifactId>
+                <version>${aws.sdk.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>com.fasterxml.jackson.core</artifactId>
+                        <groupId>jackson-databind</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>com.fasterxml.jackson.core</artifactId>
+                        <groupId>jackson-annotations</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>com.fasterxml.jackson.core</artifactId>
+                        <groupId>jackson-core</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>joda-time</artifactId>
+                        <groupId>joda-time</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- jackson-dataformat-cbor added to avoid
+
+            karaf@amp>feature:install amp-aws-elb
+Error executing command: Unable to resolve root: missing requirement [root] osgi.identity; osgi.identity=amp-aws-elb; type=karaf.feature; version="[0.5.0.SNAPSHOT,0.5.0.SNAPSHOT]"; filter:="(&(osgi.identity=amp-aws-elb)(type=karaf.feature)(version>=0.5.0.SNAPSHOT)(version<=0.5.0.SNAPSHOT))" [caused by: Unable to resolve amp-aws-elb/0.5.0.SNAPSHOT: missing requirement [amp-aws-elb/0.5.0.SNAPSHOT] osgi.identity; osgi.identity=brooklyn-aws-elb; type=osgi.bundle; version="[0.5.0.SNAPSHOT,0.5.0.SNAPSHOT]"; resolution:=mandatory [caused by: Unable to resolve brooklyn-aws-elb/0.5.0.SNAPSHOT: missing requirement [brooklyn-aws-elb/0.5.0.SNAPSHOT] osgi.wiring.package; filter:="(&(osgi.wiring.package=com.fasterxml.jackson.dataformat.cbor)(version>=2.6.0)(!(version>=3.0.0)))"]]
+
+            -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-cbor</artifactId>
+                <version>${jackson.dataformat.cbor.version}</version>
+            </dependency>
+
+            <!-- alternative (excluded) dependencies, to match those other transitive dependencies in Brooklyn -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${brooklyn.jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${brooklyn.jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${brooklyn.jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>${joda.time.version}</version>
+            </dependency>
+
+            <!-- test dependencies -->
+            <dependency>
+                <groupId>org.apache.brooklyn</groupId>
+                <artifactId>brooklyn-all</artifactId>
+                <version>${brooklyn.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.brooklyn</groupId>
+                <artifactId>brooklyn-test-support</artifactId>
+                <scope>test</scope>
+                <version>${brooklyn.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.brooklyn</groupId>
+                <artifactId>brooklyn-core</artifactId>
+                <classifier>tests</classifier>
+                <scope>test</scope>
+                <version>${brooklyn.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.brooklyn</groupId>
+                <artifactId>brooklyn-software-database</artifactId>
+                <scope>test</scope>
+                <version>${brooklyn.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.brooklyn</groupId>
+                <artifactId>brooklyn-software-base</artifactId>
+                <classifier>tests</classifier>
+                <scope>test</scope>
+                <version>${brooklyn.version}</version>
+            </dependency>
+        </dependencies>
+
+    </dependencyManagement>
+
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <version>2.3.7</version>
-                <extensions>true</extensions>
-                <executions>
-                    <execution>
-                        <id>bundle-manifest</id>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>manifest</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <supportedProjectTypes>
-                        <supportedProjectType>jar</supportedProjectType>
-                    </supportedProjectTypes>
-                    <instructions>
-                        <!-- OSGi specific instruction -->
-                        <Import-Package>!com.maxmind.geoip2,*</Import-Package>
-                    </instructions>
-                </configuration>
-            </plugin>
-        </plugins>
-     </build>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-bundle-plugin</artifactId>
+                    <version>2.3.7</version>
+                    <extensions>true</extensions>
+                    <executions>
+                        <execution>
+                            <id>bundle-manifest</id>
+                            <phase>process-classes</phase>
+                            <goals>
+                                <goal>manifest</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <supportedProjectTypes>
+                            <supportedProjectType>jar</supportedProjectType>
+                        </supportedProjectTypes>
+                        <instructions>
+                            <!-- OSGi specific instruction -->
+                            <Import-Package>!com.maxmind.geoip2,*</Import-Package>
+                        </instructions>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.karaf.tooling</groupId>
+                    <artifactId>karaf-maven-plugin</artifactId>
+                    <version>${karaf.version}</version>
+                    <extensions>true</extensions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
     <profiles>
         <profile>
@@ -205,9 +234,9 @@
                             <author>false</author>
                             <quiet>true</quiet>
                             <aggregate>false</aggregate>
-                            <detectLinks />
+                            <detectLinks/>
                         </configuration>
-                          <executions>
+                        <executions>
                             <execution>
                                 <id>attach-javadocs</id>
                                 <goals>
@@ -257,7 +286,10 @@
         <profile>
             <id>sonatype-release</id>
             <activation>
-                <property><name>brooklyn.deployTo</name><value>sonatype</value></property>
+                <property>
+                    <name>brooklyn.deployTo</name>
+                    <value>sonatype</value>
+                </property>
             </activation>
             <distributionManagement>
                 <repository>
@@ -275,4 +307,9 @@
 
     </profiles>
 
+
+    <modules>
+        <module>feature</module>
+        <module>elb</module>
+    </modules>
 </project>
