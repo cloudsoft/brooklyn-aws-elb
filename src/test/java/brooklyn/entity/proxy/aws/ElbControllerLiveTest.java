@@ -230,8 +230,9 @@ public class ElbControllerLiveTest extends BrooklynAppLiveTestSupport {
         // TODO Not the best assertion; AWS are allowed to reuse hostnames, but unlikely we'll get exactly the same one back! 
         assertNotEquals(elb2.getAttribute(ElbController.HOSTNAME), origHostname);
     }
-    
-    @Test(groups="Live")
+
+    // Disabled due to regression wrt. availability zone names in Brooklyn 0.10.0.
+    @Test(groups="Live", enabled = false)
     public void testLoadBalancerWithHttpTargets() throws Exception {
         DynamicCluster cluster = app.createAndManageChild(EntitySpec.create(DynamicCluster.class)
                 .configure(DynamicCluster.INITIAL_SIZE, 1)
