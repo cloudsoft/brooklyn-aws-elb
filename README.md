@@ -4,9 +4,6 @@ Brooklyn support for ELB
 Gives support for AWS's Elastic Load Balancer.
 
 Note: this will likely be rolled into core https://github.com/brooklyncentral/brooklyn.
-However, it currently depends on the 10MB aws-sdk so this dependency has deliberately not 
-been added to core brooklyn.
-
 
 ## Build
 
@@ -25,26 +22,42 @@ To build, run `mvn clean install`.
 | master  | 0.6.0-SNAPSHOT | 0.11.0-SNAPSHOT         |
 
 
-## Example
 
-First add the required jars to your Apache Brooklyn release (see "Future Work" for discussion 
-of OSGi): 
+## Installation in AMP
 
-    BROOKLYN_HOME=~/repos/apache/brooklyn/brooklyn-dist/dist/target/brooklyn-dist/brooklyn/
-    BROOKLYN_AWS_ELB_REPO=~/repos/cloudsoft/brooklyn-aws-elb
-    MAVEN_REPO=~/.m2/repository
-
-    AWS_SDK_VERSION=1.10.53
-    BROOKLYN_AWS_ELB_VERSION=0.5.0-SNAPSHOT
+Start AMP and add the feature
     
-    cp ${BROOKLYN_AWS_ELB_REPO}/target/brooklyn-aws-elb-${BROOKLYN_AWS_ELB_VERSION}.jar ${BROOKLYN_HOME}/lib/dropins/
-    cp ${MAVEN_REPO}/com/amazonaws/aws-java-sdk*/${AWS_SDK_VERSION}/*.jar ${BROOKLYN_HOME}/lib/dropins/
+    # Start Brooklyn/AMP karaf
+    ${AMP_HOME}/bin/karaf
+    
+    # Add io.cloudsoft.aws.elb feature repo
+    feature:repo-add mvn:io.cloudsoft.aws.elb/feature/0.6.0-SNAPSHOT/xml/features
+    
+    # Add the feature
+    feature:install amp-aws-elb
 
-And launch Brooklyn:
+## Installation in Brooklyn
+        
+Append the following to `$BROOKLYN_HOME/bin/setenv`:
+ 
+     # Add io.cloudsoft domain to ClassLoaderUtils whitelist so that io.cloudsoft bundles are also scanned for classes.
+     WHITELIST='org.apache.brooklyn.*|io.brooklyn.*|io.cloudsoft.*'
+     export EXTRA_JAVA_OPTS="-Dorg.apache.brooklyn.classloader.fallback.bundles=${WHITELIST} ${EXTRA_JAVA_OPTS}"
+ 
+Then start Brooklyn and install the feature:
+ 
+     ${BROOKLYN_HOME}/bin/karaf
+     
+     # Add io.cloudsoft.aws.elb feature repo
+     feature:repo-add mvn:io.cloudsoft.aws.elb/feature/0.6.0-SNAPSHOT/xml/features
+     
+     # Add the feature
+     feature:install amp-aws-elb
 
-    ${BROOKLYN_HOME}/bin/brooklyn launch
 
-Then deploy an app. The example below creates an ELB, and cluter of Tomcat servers:
+## Example 
+
+The example below creates an ELB, and cluster of Tomcat servers:
 
     location: aws-ec2:us-east-1
     services:
@@ -70,11 +83,6 @@ Then deploy an app. The example below creates an ELB, and cluter of Tomcat serve
               wars.root: https://bit.ly/brooklyn-0_7-helloworld-war
               http.port: 8080
       location: aws-ec2:us-east-1b
-
-
-## Future Work
-
-This module should be built as an OSGi bundle, so that it can more easily be added to Brooklyn.
 
 ----
 

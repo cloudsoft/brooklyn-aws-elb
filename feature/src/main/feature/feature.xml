@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.4.0" name="${project.groupId}-${project.version}">
+
+
+    <feature name="amp-aws-elb-dependencies" version="${project.version}" >
+        <feature dependency="true">brooklyn-locations-jclouds</feature>
+        <bundle dependency="true">mvn:org.apache.jclouds.labs/elb/${jclouds.version}</bundle>
+        <bundle>mvn:org.apache.jclouds.labs/aws-elb/${jclouds.version}</bundle>
+    </feature>
+
+    <feature name="amp-aws-elb" version="${project.version}">
+        <feature prerequisite="true">amp-aws-elb-dependencies</feature>
+        <bundle>mvn:io.cloudsoft.aws.elb/elb/0.6.0-SNAPSHOT</bundle>
+    </feature>
+</features>
+

@@ -1,12 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
+
     <groupId>io.cloudsoft.aws.elb</groupId>
-    <artifactId>brooklyn-aws-elb</artifactId>
+    <artifactId>brooklyn-aws-elb-parent</artifactId>
     <version>0.6.0-SNAPSHOT</version> <!-- BROOKLYN_AWS_ELB_VERSION -->
-    <packaging>jar</packaging>
-    
-    <name>Brooklyn AWS Elastic Load Balancer</name>
+    <packaging>pom</packaging>
+
+    <name>Brooklyn AWS Elastic Load Balancer Parent</name>
     <description>
         Brooklyn AWS Elastic Load Balancer
     </description>
@@ -15,9 +15,9 @@
     <parent>
         <groupId>org.apache.brooklyn</groupId>
         <artifactId>brooklyn-downstream-parent</artifactId>
-        <version>0.11.0-SNAPSHOT</version> <!-- BROOKLYN_VERSION -->
+        <version>0.12.0-SNAPSHOT</version> <!-- BROOKLYN_VERSION -->
     </parent>
-    
+
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -39,108 +39,9 @@
     </scm>
 
     <properties>
-        <brooklyn.jackson.version>2.7.5</brooklyn.jackson.version>
+        <aws.sdk.version>1.10.53</aws.sdk.version>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.apache.brooklyn</groupId>
-            <artifactId>brooklyn-software-base</artifactId>
-            <version>${brooklyn.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.brooklyn</groupId>
-            <artifactId>brooklyn-software-webapp</artifactId>
-            <version>${brooklyn.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.brooklyn</groupId>
-            <artifactId>brooklyn-locations-jclouds</artifactId>
-            <version>${brooklyn.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk</artifactId>
-            <version>1.10.53</version>
-            <!-- The included version of Jackson breaks our REST UI -->
-            <exclusions>
-                <exclusion>
-                    <artifactId>com.fasterxml.jackson.core</artifactId>
-                    <groupId>jackson-databind</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>com.fasterxml.jackson.core</artifactId>
-                    <groupId>jackson-annotations</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>com.fasterxml.jackson.core</artifactId>
-                    <groupId>jackson-core</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>joda-time</artifactId>
-                    <groupId>joda-time</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <!-- alternative (excluded) dependencies, to match those other transitive dependencies in Brooklyn -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${brooklyn.jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>${brooklyn.jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>${brooklyn.jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>2.4</version>
-        </dependency>
-
-        <!-- test dependencies -->
-        <dependency>
-            <groupId>org.apache.brooklyn</groupId>
-            <artifactId>brooklyn-all</artifactId>
-            <version>${brooklyn.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.brooklyn</groupId>
-            <artifactId>brooklyn-test-support</artifactId>
-            <scope>test</scope>
-            <version>${brooklyn.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.brooklyn</groupId>
-            <artifactId>brooklyn-core</artifactId>
-            <classifier>tests</classifier>
-            <scope>test</scope>
-            <version>${brooklyn.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.brooklyn</groupId>
-            <artifactId>brooklyn-software-database</artifactId>
-            <scope>test</scope>
-            <version>${brooklyn.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.brooklyn</groupId>
-            <artifactId>brooklyn-software-base</artifactId>
-            <classifier>tests</classifier>
-            <scope>test</scope>
-            <version>${brooklyn.version}</version>
-        </dependency>
-    </dependencies>
-    
     <build>
         <plugins>
             <plugin>
@@ -167,7 +68,14 @@
                     </instructions>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.karaf.tooling</groupId>
+                <artifactId>karaf-maven-plugin</artifactId>
+                <version>${karaf.version}</version>
+                <extensions>true</extensions>
+            </plugin>
         </plugins>
+
      </build>
 
     <profiles>
@@ -275,4 +183,9 @@
 
     </profiles>
 
+
+    <modules>
+        <module>feature</module>
+        <module>elb</module>
+    </modules>
 </project>
