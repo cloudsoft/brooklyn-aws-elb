@@ -1,0 +1,8 @@
+brooklyn.catalog:
+  bundle: io.cloudsoft.aws.elb.brooklyn-aws-elb
+  version: 0.6.0.SNAPSHOT
+  items:
+  - id: amazon-aws-elb-controller
+    itemType: entity
+    item:
+      type: brooklyn.entity.proxy.aws.ElbController

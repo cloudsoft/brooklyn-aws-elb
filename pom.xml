@@ -4,7 +4,7 @@
     <groupId>io.cloudsoft.aws.elb</groupId>
     <artifactId>brooklyn-aws-elb</artifactId>
     <version>0.6.0-SNAPSHOT</version> <!-- BROOKLYN_AWS_ELB_VERSION -->
-    <packaging>jar</packaging>
+    <packaging>bundle</packaging>
     
     <name>Brooklyn AWS Elastic Load Balancer</name>
     <description>
@@ -15,7 +15,7 @@
     <parent>
         <groupId>org.apache.brooklyn</groupId>
         <artifactId>brooklyn-downstream-parent</artifactId>
-        <version>0.11.0-SNAPSHOT</version> <!-- BROOKLYN_VERSION -->
+        <version>0.12.0-SNAPSHOT</version> <!-- BROOKLYN_VERSION -->
     </parent>
     
     <licenses>
@@ -40,6 +40,7 @@
 
     <properties>
         <brooklyn.jackson.version>2.7.5</brooklyn.jackson.version>
+        <aws-java-sdk.version>1.11.195</aws-java-sdk.version>
     </properties>
 
     <dependencies>
@@ -61,49 +62,16 @@
 
         <dependency>
             <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk</artifactId>
-            <version>1.10.53</version>
-            <!-- The included version of Jackson breaks our REST UI -->
-            <exclusions>
-                <exclusion>
-                    <artifactId>com.fasterxml.jackson.core</artifactId>
-                    <groupId>jackson-databind</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>com.fasterxml.jackson.core</artifactId>
-                    <groupId>jackson-annotations</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>com.fasterxml.jackson.core</artifactId>
-                    <groupId>jackson-core</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>joda-time</artifactId>
-                    <groupId>joda-time</groupId>
-                </exclusion>
-            </exclusions>
+            <artifactId>aws-java-sdk-elasticloadbalancing</artifactId>
+            <version>${aws-java-sdk.version}</version>
         </dependency>
 
-        <!-- alternative (excluded) dependencies, to match those other transitive dependencies in Brooklyn -->
+        <!-- This is an optional dependency of joda-time, which is used by the AWS SDK. I don't know if it is actually
+             required by the AWS SDK, but to be safe we'll include it (and avoid an OSGI fudge as a result) -->
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${brooklyn.jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>${brooklyn.jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>${brooklyn.jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>2.4</version>
+            <groupId>org.joda</groupId>
+            <artifactId>joda-convert</artifactId>
+            <version>1.2</version>
         </dependency>
 
         <!-- test dependencies -->
@@ -159,11 +127,21 @@
                 </executions>
                 <configuration>
                     <supportedProjectTypes>
-                        <supportedProjectType>jar</supportedProjectType>
+                        <supportedProjectType>bundle</supportedProjectType>
                     </supportedProjectTypes>
                     <instructions>
-                        <!-- OSGi specific instruction -->
-                        <Import-Package>!com.maxmind.geoip2,*</Import-Package>
+                        <!-- Here we identify the AWS SDK artifacts and their dependencies. Annoyingly we have to follow
+                             the transitive dependencies. These will be embedded in the bundle, so there's no need to
+                             have to think about how the user will get the AWS SDK into their OSGI container, and the
+                             size of the transitive dependencies are relatively small so we can get away with it. -->
+                        <Embed-Dependency>
+                            groupId=com.amazonaws;artifactId=*;scope=compile|runtime,
+                            groupId=software.amazon.ion;artifactId=ion-java;scope=compile|runtime,
+                            groupId=com.fasterxml.jackson.dataformat;artifactId=jackson-dataformat-cbor;scope=compile|runtime,
+                            groupId=joda-time;artifactId=joda-time;scope=compile|runtime,
+                            groupId=org.joda;artifactId=joda-convert;scope=compile|runtime
+                        </Embed-Dependency>
+                        <Embed-Transitive>true</Embed-Transitive>
                     </instructions>
                 </configuration>
             </plugin>
