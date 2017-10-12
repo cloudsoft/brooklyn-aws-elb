@@ -46,7 +46,7 @@ And launch Brooklyn:
 
     ${BROOKLYN_HOME}/bin/brooklyn launch
 
-Then deploy an app. The example below creates an ELB, and cluter of Tomcat servers:
+Then deploy an app. The example below creates an ELB, and cluster of Tomcat servers:
 
     location: aws-ec2:us-east-1
     services:
