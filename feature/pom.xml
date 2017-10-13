@@ -1,0 +1,64 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.cloudsoft.brooklyn.aws.elb</groupId>
+        <artifactId>brooklyn-aws-elb-parent</artifactId>
+        <version>0.8.0-SNAPSHOT</version> <!-- BROOKLYN_AWS_ELB_VERSION -->
+    </parent>
+
+    <artifactId>feature</artifactId>
+    <packaging>feature</packaging>
+
+    <name>Brooklyn AWS ELB Karaf feature</name>
+    <description>
+       The AWS ELB Karaf feature
+    </description>
+    <url>https://github.com/cloudsoft/brooklyn-aws-elb</url>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-osgi</artifactId>
+            <version>${aws-sdk.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-cbor</artifactId>
+            <version>${brooklyn.jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>${joda-time.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.ion</groupId>
+            <artifactId>ion-java</artifactId>
+            <version>${amazon-ion.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.karaf.tooling</groupId>
+                    <artifactId>karaf-maven-plugin</artifactId>
+                    <version>${karaf.version}</version>
+                    <extensions>true</extensions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.karaf.tooling</groupId>
+                <artifactId>karaf-maven-plugin</artifactId>
+                <configuration>
+                    <aggregateFeatures>true</aggregateFeatures>
+                    <includeTransitiveDependency>false</includeTransitiveDependency>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
