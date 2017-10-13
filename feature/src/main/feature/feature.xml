@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<features xmlns="http://karaf.apache.org/xmlns/features/v1.4.0" name="${project.groupId}-${project.version}">
+    <feature name="amp-aws-elb" version="${project.version}">
+        <feature prerequisite="true">brooklyn-core</feature>
+        <feature prerequisite="true">brooklyn-locations-jclouds</feature>
+        <bundle>mvn:com.fasterxml.jackson.dataformat/jackson-dataformat-cbor/${brooklyn.jackson.version}</bundle>
+        <bundle>mvn:com.amazonaws/aws-java-sdk-osgi/${aws-sdk.version}</bundle>
+        <bundle>mvn:io.cloudsoft.brooklyn.aws.elb/brooklyn-aws-elb/${project.version}</bundle>
+    </feature>
+</features>

@@ -1,0 +1,16 @@
+brooklyn.catalog:
+  version: "0.8.0-SNAPSHOT" # BROOKLYN_AWS_ELB_VERSION
+  iconUrl: classpath://icons/aws-elb.png
+  publish:
+    license_code: APACHE-2.0
+    license_url: http://www.apache.org/licenses/LICENSE-2.0.txt
+    overview: README.md
+
+  items:
+  - id: brooklyn.entity.proxy.aws.ElbController
+    itemType: entity
+    description: |
+      Elastic Load Balancing automatically distributes incoming application traffic across 
+      multiple targets, such as Amazon EC2 instances, containers, and IP addresses.
+    item:
+      type: brooklyn.entity.proxy.aws.ElbController

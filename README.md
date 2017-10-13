@@ -10,7 +10,55 @@ been added to core brooklyn.
 
 ## Build
 
-To build, run `mvn clean install`.
+From the top level of the project:
+
+    mvn clean install
+
+## Install
+
+Start Brooklyn or AMP, then connect using the Karaf client:
+
+    ./bin/client
+
+Add the feature repository and then the ELB feature:
+
+    feature:repo-add mvn:io.cloudsoft.brooklyn.aws.elb/feature/0.8.0-SNAPSHOT/xml/features
+    feature:install amp-aws-elb
+
+Check all the bundles are up:
+
+    list| grep Failed
+
+
+## Example Usage
+
+Deploy an app like that below, which creates an ELB and a cluster of Tomcat servers:
+
+    location: aws-ec2:us-east-1
+    services:
+    - type: brooklyn.entity.proxy.aws.ElbController
+      name: ELB
+      brooklyn.config:
+        aws.elb.loadBalancerName: my-example-1
+        aws.elb.availabilityZones: [us-east-1a, us-east-1b]
+        aws.elb.loadBalancerProtocol: HTTP
+        aws.elb.instancePort: 8080
+        loadbalancer.serverpool: $brooklyn:entity("cluster")
+    
+    - type: org.apache.brooklyn.entity.group.DynamicCluster
+      id: cluster
+      name: cluster
+      brooklyn.config:
+        initialSize: 2
+        enableAvailabilityZones: true
+        availabilityZoneNames: [us-east-1a, us-east-1b]
+        memberSpec:
+          $brooklyn:entitySpec:
+            type: org.apache.brooklyn.entity.webapp.tomcat.Tomcat8Server
+            brooklyn.config:
+              # points at maven-central 0.7.0-incubating/brooklyn-example-hello-world-webapp-0.7.0-incubating.war
+              wars.root: https://bit.ly/brooklyn-0_7-helloworld-war
+              http.port: 8080
 
 
 ## Releases
@@ -27,60 +75,9 @@ To build, run `mvn clean install`.
 | master  | 0.8.0-SNAPSHOT | 1.0.0-SNAPSHOT          |
 
 
-## Example
-
-First add the required jars to your Apache Brooklyn release (see "Future Work" for discussion 
-of OSGi): 
-
-    BROOKLYN_HOME=~/repos/apache/brooklyn/brooklyn-dist/dist/target/brooklyn-dist/brooklyn/
-    BROOKLYN_AWS_ELB_REPO=~/repos/cloudsoft/brooklyn-aws-elb
-    MAVEN_REPO=~/.m2/repository
-
-    AWS_SDK_VERSION=1.10.53
-    BROOKLYN_AWS_ELB_VERSION=0.5.0-SNAPSHOT
-    
-    cp ${BROOKLYN_AWS_ELB_REPO}/target/brooklyn-aws-elb-${BROOKLYN_AWS_ELB_VERSION}.jar ${BROOKLYN_HOME}/lib/dropins/
-    cp ${MAVEN_REPO}/com/amazonaws/aws-java-sdk*/${AWS_SDK_VERSION}/*.jar ${BROOKLYN_HOME}/lib/dropins/
-
-And launch Brooklyn:
-
-    ${BROOKLYN_HOME}/bin/brooklyn launch
-
-Then deploy an app. The example below creates an ELB, and cluster of Tomcat servers:
-
-    location: aws-ec2:us-east-1
-    services:
-    - type: brooklyn.entity.proxy.aws.ElbController
-      name: ELB
-      brooklyn.config:
-        aws.elb.loadBalancerName: br-example-1
-        aws.elb.availabilityZones: [us-east-1a, us-east-1b]
-        aws.elb.loadBalancerProtocol: HTTP
-        aws.elb.instancePort: 8080
-        loadbalancer.serverpool: $brooklyn:entity("cluster")
-    
-    - type: org.apache.brooklyn.entity.group.DynamicCluster
-      id: cluster
-      name: cluster
-      brooklyn.config:
-        initialSize: 1
-        memberSpec:
-          $brooklyn:entitySpec:
-            type: org.apache.brooklyn.entity.webapp.tomcat.Tomcat8Server
-            brooklyn.config:
-              # points at maven-central 0.7.0-incubating/brooklyn-example-hello-world-webapp-0.7.0-incubating.war
-              wars.root: https://bit.ly/brooklyn-0_7-helloworld-war
-              http.port: 8080
-      location: aws-ec2:us-east-1b
-
-
-## Future Work
-
-This module should be built as an OSGi bundle, so that it can more easily be added to Brooklyn.
-
 ----
 
-© 2013 Cloudsoft Corporation Limited. All rights reserved.
+© 2013-2017 Cloudsoft Corporation Limited. All rights reserved.
 
 Use of this software is subject to the Cloudsoft EULA, provided in LICENSE.md and at 
 
